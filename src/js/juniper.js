@@ -2,7 +2,7 @@
  * Juniper.js allows you to add Parsley.js validation to X-editable form elements
  * Author: Ben Tempchin
 */
-;(function ( $, window, document, undefined ) {
+;(function ($, window, document, undefined) {
     // Create the defaults once
     var pluginName = 'juniper',
         defaults = {
@@ -17,7 +17,6 @@
 
     // The actual plugin constructor
     function Juniper ( element, options ) {
-        this.element = element;
         this.$element = $(element);
 
         this.options = $.extend( {}, defaults, options) ;
