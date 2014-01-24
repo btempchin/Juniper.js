@@ -4,16 +4,23 @@ module.exports = function (grunt) {
     grunt.initConfig({
             dirs: {
                 main: '.',
-                jsSrc: 'src/js/',
-                sassSrc: 'src/sass/'
+                jsSrc: 'src/js',
+                sassSrc: 'src/sass'
             },
             watch: {
-                files: ['<%= jshint.files %>'],
-                tasks: 'default'
+                js: {
+                    files: ['<%= jshint.files %>'],
+                    tasks: ['jshint', 'uglify']
+                },
+                scss: {
+                    files: ['<%= dirs.sassSrc %>/*.scss'],
+                    tasks: ['compass']
+                }
+
             },
             jshint: {
                 files: [
-                    '<%= dirs.jsSrc %>juniper.js'
+                    '<%= dirs.jsSrc %>/juniper.js'
                 ],
                 options: {
                     curly: true,
@@ -40,7 +47,7 @@ module.exports = function (grunt) {
                     codegen: {quote_keys: true}
                 },
                 dist: {
-                    src: ['<%= dirs.jsSrc %>juniper.js'],
+                    src: ['<%= dirs.jsSrc %>/juniper.js'],
                     dest: '<%= dirs.main %>/juniper.min.js'
                 }
             },
