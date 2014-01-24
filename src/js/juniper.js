@@ -4,24 +4,15 @@
 */
 ;(function ($, window, document, undefined) {
     // Create the defaults once
-    var pluginName = 'juniper',
-        defaults = {
-            namespace: 'data-juniper',
-            trigger: 'keyup',
-            errorClass: 'has-error parsley-error',
-            controlGroupClass: '.control-group',
-            parsleyDefaults: {
-                animate: true
-            }
-        };
+    var pluginName = 'juniper';
 
     // The actual plugin constructor
     function Juniper (element, options) {
         this.$element = $(element);
 
-        this.options = $.extend({}, defaults, options) ;
+        this.options = $.extend({}, $.fn[pluginName].defaults, options) ;
 
-        this._defaults = defaults;
+        this._defaults = $.fn[pluginName].defaults;
         this._name = pluginName;
 
         this.init();
@@ -170,6 +161,7 @@
         this.$element.editable('option', 'validate', $.proxy(this._validateElement, this));
     };
 
+
     // A really lightweight plugin wrapper around the constructor,
     // preventing against multiple instantiations
     $.fn[pluginName] = function (options) {
@@ -179,5 +171,16 @@
                        new Juniper(this, options));
             }
         });
+    };
+
+    // globally accessable defaults
+    $.fn[pluginName].defaults = {
+        namespace: 'data-juniper',
+        trigger: 'keyup',
+        errorClass: 'has-error parsley-error',
+        controlGroupClass: '.control-group',
+        parsleyDefaults: {
+            animate: true
+        }
     };
 }(jQuery, window, document));
