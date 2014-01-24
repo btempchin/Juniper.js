@@ -122,7 +122,7 @@
                     classHandler: function () {
                         return base.$form.find(base.options.controlGroupClass);
                     },
-                    container: function (element, isRadioOrCheckbox) {
+                    container: function () {
                         // create a parsley error container above the
                         // x-editable error container
                         var $container = base.$editableErrorContainer.find(".parsley-container");
@@ -171,5 +171,4 @@
             }
         });
     };
-
-})( jQuery, window, document );
+}(jQuery, window, document));
