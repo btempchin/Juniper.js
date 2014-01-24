@@ -16,10 +16,10 @@
         };
 
     // The actual plugin constructor
-    function Juniper ( element, options ) {
+    function Juniper (element, options) {
         this.$element = $(element);
 
-        this.options = $.extend( {}, defaults, options) ;
+        this.options = $.extend({}, defaults, options) ;
 
         this._defaults = defaults;
         this._name = pluginName;
@@ -31,51 +31,56 @@
         _createDomApi: function () {
             if (typeof $.fn.domApi === 'undefined') {
                 // Zepto deserializeValue function
-                var deserializeValue = function( value ) {
+                var deserializeValue = function(value) {
                     var num;
                     try {
                         return value ?
                             value === "true" ||
-                            ( value === "false" ? false :
+                            (value === "false" ? false :
                              value === "null" ? null :
-                             !isNaN( num = Number( value ) ) ? num :
-                             /^[\[\{]/.test( value ) ? $.parseJSON( value ) :
-                             value )
+                             !isNaN(num = Number(value)) ? num :
+                             /^[\[\{]/.test(value) ? $.parseJSON(value) :
+                             value)
                                  : value;
-                    } catch ( e ) {
+                    } catch (e) {
                         return value;
                     }
                 };
 
                 // Zepto camelize function
-                var camelize = function ( str ) {
-                    return str.replace( /-+(.)?/g, function ( match, chr ) {
+                var camelize = function (str) {
+                    return str.replace(/-+(.)?/g, function (match, chr) {
                         return chr ? chr.toUpperCase() : '';
                     });
                 };
 
                 /* PARSLEY DOM API
                  * =================================================== */
-                $.fn.domApi = function ( namespace ) {
+                $.fn.domApi = function (namespace) {
                     var attribute,
                         obj = {},
                         regex = new RegExp("^" + namespace, 'i');
 
-                    if ( 'undefined' === typeof this[ 0 ] ) {
+                    if ('undefined' === typeof this[0]) {
                         return {};
                     }
 
-                    for ( var i in this[ 0 ].attributes ) {
-                        attribute = this[ 0 ].attributes[ i ];
+                    for (var i in this[0].attributes) {
+                        attribute = this[0].attributes[i];
 
-                        if ( 'undefined' !== typeof attribute && null !== attribute && attribute.specified && regex.test( attribute.name ) ) {
-                            obj[ camelize( attribute.name.replace( namespace, '' ) ) ] = deserializeValue( attribute.value );
+                        if ('undefined' !== typeof attribute && null !== attribute && attribute.specified && regex.test(attribute.name)) {
+                            obj[camelize(attribute.name.replace(namespace, ''))] = deserializeValue(attribute.value);
                         }
                     }
 
                     return obj;
                 };
             }
+        },
+        _decamelize: function (str) {
+            return str.replace(/(\w)([A-Z])/g, function (match, chr0, chr1) {
+                return (chr0 && chr1) ? chr0 + '-' + chr1.toLowerCase() : '';
+            }).toLowerCase();
         },
         _getElementData: function () {
             this.validationData = this.$element.domApi(this.options.namespace);
@@ -111,6 +116,10 @@
                         value = value;
                     }
                 }
+                // key has been camelized
+                // undo it
+                key = base._decamelize(key);
+
                 base.$input.attr('parsley-' + key, value);
             });
 
@@ -163,11 +172,11 @@
 
     // A really lightweight plugin wrapper around the constructor,
     // preventing against multiple instantiations
-    $.fn[pluginName] = function ( options ) {
+    $.fn[pluginName] = function (options) {
         return this.each(function () {
             if (!$.data(this, 'plugin_' + pluginName)) {
                 $.data(this, 'plugin_' + pluginName,
-                       new Juniper( this, options ));
+                       new Juniper(this, options));
             }
         });
     };
